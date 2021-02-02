@@ -1,0 +1,13 @@
+type Post @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+    id: ID!
+    createdBy: String
+    message: String!
+    comments: [Comment] @connection(name: "PostComments")
+}
+
+type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {
+    id: ID!
+    message: String
+    createdBy: String
+    post: Post @connection(name: "PostComments")
+}
