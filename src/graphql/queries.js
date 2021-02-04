@@ -26,15 +26,22 @@ export const listPosts = /* GraphQL */ `
   query ListPosts(
     $filter: ModelPostFilterInput
     $limit: Int
-    $nextToken: String
+    # $nextToken: String
   ) {
-    listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listPosts(filter: $filter, limit: $limit
+    # , nextToken: $nextToken
+    ) {
       items {
         id
         createdBy
         message
         comments {
-          nextToken
+          items {
+              id
+              message
+              createdBy
+              createdAt
+          }
         }
         createdAt
         updatedAt
