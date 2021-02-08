@@ -1,28 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import { Button, CircularProgress, Grid } from "@material-ui/core";
 
 import * as queries from "../../graphql/queries";
+import * as subscriptions from "../../graphql/subscriptions"
 import PostCard from "../post/PostCard";
 import PostForm from "../post/PostForm";
 
+const initialState = {
+    message: "", posts: []
+}
+
+function reducer(state, action) {
+    switch(action.type) {
+        case "SET_POSTS":
+            return { ...state, posts: action.posts }
+        case "SET_INPUT":
+            return { ...state, [action.key]: action.value }
+        case "CLEAR_INPUT":
+            return { ...initialState, posts: state.posts }
+        case "ADD_POST":
+            return { ...state, posts: [...state.posts, action.post] }
+        default:
+            return state
+    }
+}
 
 function Home() {
     const history = useHistory();
     const [user, setUser] = useState(null);
-    const [posts, setPosts] = useState();
+    const [state, dispatch] = useReducer(reducer, initialState);
+    // const [posts, setPosts] = useState();
 
     useEffect(() => {
         checkIfUserExists();
         fetchPosts();
+        const subscription = API.graphql(graphqlOperation(subscriptions.onCreatePost)).subscribe({
+            next: ({ value }) => 
+            {
+                const post = value.data.onCreatePost
+                dispatch({ type: "ADD_POST", post })
+            }
+        })
+        return () => subscription.unsubscribe();
     }, [])
 
     const checkIfUserExists = async () => {
         try {
             const user = await Auth.currentAuthenticatedUser();
+            console.log("User: ", user)
             setUser(user);
-            // console.log(user);
         } catch (error) {
             
         }
@@ -31,8 +59,7 @@ function Home() {
     const fetchPosts = async () => {
         try {
             const postData = await API.graphql(graphqlOperation(queries.listPosts));
-            // console.log("post-data: ", postData);
-            setPosts(postData);
+            dispatch({ type: "SET_POSTS", posts: postData.data.listPosts.items })
         } catch (error) {
             console.log("error while fetching posts: ", error);
         }
@@ -67,16 +94,18 @@ function Home() {
                     <div style={{ width: "100%", maxWidth: 600 }}>
                         <PostForm  />
                     </div>
-                    
-                    {!posts ? (
-                        <CircularProgress />
-                    ) : (
-                        posts.data.listPosts.items.map((post) => (
-                        <Grid item key={post.id} style={{ width: "100%", maxWidth: 600 }} >
-                            <PostCard post={post} />        
-                        </Grid>    
-                        ))
-                    )}
+                    {
+                        !state.posts.length ? (
+                            <CircularProgress />
+                        ) : (
+                            state.posts.map((post, index) => (
+                                <Grid item key={index} style={{ width: "100%", maxWidth: 600 }} >
+                                    <PostCard post={post} />        
+                                </Grid>    
+                                )
+                            )
+                        )
+                    }
                 </Grid>
             </div>
         )

@@ -13,12 +13,12 @@ export const onCreatePost = /* GraphQL */ `
           message
           createdBy
           createdAt
-          updatedAt
+        #   updatedAt
         }
         nextToken
       }
       createdAt
-      updatedAt
+    #   updatedAt
     }
   }
 `;
