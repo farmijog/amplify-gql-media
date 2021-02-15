@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth, API, graphqlOperation } from "aws-amplify";
-import { Button, CircularProgress, Grid } from "@material-ui/core";
+import { Button, CircularProgress as Loading, Grid } from "@material-ui/core";
 
 import * as queries from "../../graphql/queries";
 import * as subscriptions from "../../graphql/subscriptions"
@@ -31,7 +31,6 @@ function Home() {
     const history = useHistory();
     const [user, setUser] = useState(null);
     const [state, dispatch] = useReducer(reducer, initialState);
-    // const [posts, setPosts] = useState();
 
     useEffect(() => {
         checkIfUserExists();
@@ -96,7 +95,7 @@ function Home() {
                     </div>
                     {
                         !state.posts.length ? (
-                            <CircularProgress />
+                            <Loading />
                         ) : (
                             state.posts.map((post, index) => (
                                 <Grid item key={index} style={{ width: "100%", maxWidth: 600 }} >
