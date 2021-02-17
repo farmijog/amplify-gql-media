@@ -20,6 +20,7 @@ export const createPost = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -44,6 +45,7 @@ export const updatePost = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -68,6 +70,7 @@ export const deletePost = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -89,6 +92,7 @@ export const createComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }
@@ -113,6 +117,7 @@ export const updateComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }
@@ -137,6 +142,7 @@ export const deleteComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }

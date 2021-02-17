@@ -3,6 +3,7 @@ type Post @model @auth(rules: [{ allow: owner, queries: null, ownerField: "creat
     createdBy: String
     message: String!
     comments: [Comment] @connection(name: "PostComments")
+    image: String
 }
 
 type Comment @model @auth(rules: [{ allow: owner, queries: null, ownerField: "createdBy" }]) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { useHistory } from "react-router-dom";
-import { Auth, API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
 import { Button, CircularProgress as Loading, Grid } from "@material-ui/core";
 
 import * as queries from "../../graphql/queries";
@@ -16,10 +16,10 @@ function reducer(state, action) {
     switch(action.type) {
         case "SET_POSTS":
             return { ...state, posts: action.posts }
-        case "SET_INPUT":
-            return { ...state, [action.key]: action.value }
-        case "CLEAR_INPUT":
-            return { ...initialState, posts: state.posts }
+        // case "SET_INPUT":
+        //     return { ...state, [action.key]: action.value }
+        // case "CLEAR_INPUT":
+        //     return { ...initialState, posts: state.posts }
         case "ADD_POST":
             return { ...state, posts: [...state.posts, action.post] }
         default:
@@ -58,6 +58,14 @@ function Home() {
     const fetchPosts = async () => {
         try {
             const postData = await API.graphql(graphqlOperation(queries.listPosts));
+            const postsFromAPI = postData.data.listPosts.items;
+            await Promise.all(postsFromAPI.map(async post => {
+                if (post.image) {
+                    const image = await Storage.get(post.image);
+                    post.image = image;
+                }
+                // return image;
+            }))
             dispatch({ type: "SET_POSTS", posts: postData.data.listPosts.items })
         } catch (error) {
             console.log("error while fetching posts: ", error);

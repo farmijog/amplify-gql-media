@@ -17,6 +17,7 @@ export const getPost = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -26,27 +27,21 @@ export const listPosts = /* GraphQL */ `
   query ListPosts(
     $filter: ModelPostFilterInput
     $limit: Int
-    # $nextToken: String
   ) {
-    listPosts(filter: $filter, limit: $limit
-    # , nextToken: $nextToken
-    ) {
+    listPosts(filter: $filter, limit: $limit) {
       items {
         id
         createdBy
         message
         comments {
-          items {
-              id
-              message
-              createdBy
-              createdAt
-          }
+            items {
+                id message createdBy createdAt
+            }
         }
+        image
         createdAt
         updatedAt
       }
-      nextToken
     }
   }
 `;
@@ -63,6 +58,7 @@ export const getComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }
@@ -86,6 +82,7 @@ export const listComments = /* GraphQL */ `
           id
           createdBy
           message
+          image
           createdAt
           updatedAt
         }

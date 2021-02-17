@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, TextField } from "@material-ui/core";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import { CircularProgress as Loading } from "@material-ui/core";
 
 import * as mutations from "../../graphql/mutations";
@@ -13,13 +13,19 @@ function PostForm() {
         setPostData({ ...postData, [e.target.name]: e.target.value });
     }
 
+    const onChangeImg = async (e) => {
+        if (!e.target.files[0]) return;
+        const file = e.target.files[0];
+        setPostData({ ...postData, image: file.name });
+        await Storage.put(file.name, file);
+    }
+
     const createPost = async () => {
         const { message } = postData;
         if (message === "") return;
-        const post = { message }
         try {
             setPostLoading(true)
-            await API.graphql(graphqlOperation(mutations.createPost, { input: post }))
+            await API.graphql(graphqlOperation(mutations.createPost, { input: postData }))
             setPostData({ message: "" });
         } catch (error) {
             console.log("Error while trying to post: ", error);
@@ -40,6 +46,7 @@ function PostForm() {
                     multiline
                     rowsMax={5}
                 />
+                <input type="file" onChange={onChangeImg} />
                 <br/>
                 {postLoading ? (
                     <Loading style={{ float: "right" }} />        

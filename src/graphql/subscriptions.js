@@ -13,12 +13,13 @@ export const onCreatePost = /* GraphQL */ `
           message
           createdBy
           createdAt
-        #   updatedAt
+          updatedAt
         }
         nextToken
       }
+      image
       createdAt
-    #   updatedAt
+      updatedAt
     }
   }
 `;
@@ -38,6 +39,7 @@ export const onUpdatePost = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -59,6 +61,7 @@ export const onDeletePost = /* GraphQL */ `
         }
         nextToken
       }
+      image
       createdAt
       updatedAt
     }
@@ -77,6 +80,7 @@ export const onCreateComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }
@@ -98,6 +102,7 @@ export const onUpdateComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }
@@ -119,6 +124,7 @@ export const onDeleteComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        image
         createdAt
         updatedAt
       }
