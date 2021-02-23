@@ -15,7 +15,7 @@ export const getPost = /* GraphQL */ `
           createdAt
           updatedAt
         }
-        nextToken
+        # nextToken
       }
       image
       createdAt

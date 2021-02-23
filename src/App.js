@@ -9,6 +9,7 @@ import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import Home from "./components/private/Home";
 import Landing from "./pages/Landing";
+import PostDetail from "./components/post/PostDetail";
 
 function App() {
     
@@ -23,6 +24,7 @@ function App() {
                     <Switch>
                         <ProtectedRoute exact path="/home" component={Home} />
                     </Switch>
+                    <Route exact path="/post/:id" component={PostDetail} />
                 </Router>
             </Container>
         </div>

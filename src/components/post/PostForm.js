@@ -87,11 +87,11 @@ function PostForm() {
                     <ImageSearch />
                     <input type="file" accept="image/*" onChange={onChangeImg} hidden />
                 </IconButton>
-                <Button variant="contained" size="small" style={{ textTransform: "none" }}
+                {/* <Button variant="contained" size="small" style={{ textTransform: "none" }}
                     onClick={() => console.log("postData: ", postData, "imgFile: ", imgFile, "preview: ", previewSource)}
                 >
                     test log
-                </Button>
+                </Button> */}
                 {postLoading ? (
                     <Loading style={{ float: "right" }} />        
                 ) : (
