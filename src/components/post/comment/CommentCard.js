@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import moment from "moment"
 
-function CommentDetail({ comment }) {
+function CommentCard({ comment }) {
     return (
         <div>
             <Card variant="outlined" elevation={3} style={{ marginBottom: 5 }}>
@@ -21,4 +21,4 @@ function CommentDetail({ comment }) {
     );
 }
 
-export default CommentDetail;
+export default CommentCard;

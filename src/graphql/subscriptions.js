@@ -77,9 +77,6 @@ export const onCreateComment = /* GraphQL */ `
         id
         createdBy
         message
-        comments {
-          nextToken
-        }
         image
         createdAt
         updatedAt

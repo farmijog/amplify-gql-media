@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { Avatar, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading, 
     IconButton, Grid, Typography 
 } from "@material-ui/core";
-import { FavoriteBorder, QuestionAnswer } from "@material-ui/icons";
-import { red, blue } from "@material-ui/core/colors";
+import { FavoriteBorder } from "@material-ui/icons";
+import { red } from "@material-ui/core/colors";
 import moment from "moment";
 
 import * as queries from "../../graphql/queries";
+import * as subscriptions from "../../graphql/subscriptions";
 import CommentForm from "./comment/CommentForm";
-import CommentDetail from "./comment/CommentDetail";
+import CommentCard from "./comment/CommentCard";
 
 function PostDetail({ match }) {
     const { id } = match.params;
@@ -17,9 +18,14 @@ function PostDetail({ match }) {
     const [postDetail, setPostDetail] = useState();
 
     useEffect(() => {
-        if (!postDetail) {
-            getPostDetail(id)
-        }
+        getPostDetail(id)
+        const subscription = API.graphql(graphqlOperation(subscriptions.onCreateComment)).subscribe({
+            next: ({ value }) => {
+                const { post: { id } } = value.data.onCreateComment
+                getPostDetail(id)
+            }
+        })
+        return () => subscription.unsubscribe();
     }, [])
 
     const getPostDetail = async (id) => {
@@ -84,7 +90,7 @@ function PostDetail({ match }) {
                             <CommentForm postId={postDetail.id} />
                             {postDetail.comments.items.map((comment, index) => (
                                 <div key={index}>
-                                    <CommentDetail comment={comment} />
+                                    <CommentCard comment={comment} />
                                 </div>
                             ))}
                         </Grid>

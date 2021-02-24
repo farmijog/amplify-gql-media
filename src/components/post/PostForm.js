@@ -96,14 +96,14 @@ function PostForm() {
                     <Loading style={{ float: "right" }} />        
                 ) : (
                     <Button
-                    disabled={postData.message.trim() === "" && !postData.image ? true : false}
-                    onClick={createPost}
-                    variant="contained" 
-                    color="primary" 
-                    style={{ float: "right", borderRadius: 50, textTransform: "none", marginTop: 10 }}
-                >
-                    Post
-                </Button>
+                        disabled={postData.message.trim() === "" && !postData.image ? true : false}
+                        onClick={createPost}
+                        variant="contained" 
+                        color="primary" 
+                        style={{ float: "right", borderRadius: 50, textTransform: "none", marginTop: 10 }}
+                    >
+                        Post
+                    </Button>
                 )}
             </div>
         </div>
