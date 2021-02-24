@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import {
     Avatar, Card, CardHeader, CardContent, CardActions, CardMedia, IconButton, makeStyles, Typography
 } from "@material-ui/core";
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function PostCard({ post }) {
+    const history = useHistory();
     const classes = useStyles();
     return (
         <div>
@@ -37,7 +39,7 @@ function PostCard({ post }) {
                     <IconButton>
                         <FavoriteBorder style={{ color: red[500] }} />
                     </IconButton>
-                    <IconButton>
+                    <IconButton onClick={() => history.push(`/post/${post.id}`)} >
                         <QuestionAnswer style={{ color: blue[500] }} />
                     </IconButton>
                     <Typography>

@@ -8,6 +8,8 @@ import { red, blue } from "@material-ui/core/colors";
 import moment from "moment";
 
 import * as queries from "../../graphql/queries";
+import CommentForm from "./comment/CommentForm";
+import CommentDetail from "./comment/CommentDetail";
 
 function PostDetail({ match }) {
     const { id } = match.params;
@@ -24,7 +26,6 @@ function PostDetail({ match }) {
         try {
             const post = await API.graphql(graphqlOperation(queries.getPost, { id: id }));
             post.data.getPost !== null ? setPostDetail(post.data.getPost) : setPostDetail(null);
-            console.log(post)
         } catch (error) {
             console.log("Error while fetching post: ", error);
         }
@@ -33,24 +34,24 @@ function PostDetail({ match }) {
 
     return (
         <div>
-            {loadingPost ? (
-                <Loading />
-            ):(
-                !postDetail ? (
-                    <h1>post not found</h1>
-                ) : (
-                    <Grid
-                        container
-                        direction="column"
-                        justify="center"
-                        alignItems="center"
-                        spacing={2}
-                        style={{ marginTop: 10 }}
-                    >
+            <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={2}
+                style={{ marginTop: 10 }}
+            >
+                {loadingPost ? (
+                    <Loading />
+                ):(
+                    !postDetail ? (
+                        <h1>post not found</h1>
+                    ) : (
                         <Grid 
                             item style={{ width: "100%", maxWidth: 600 }}
                         >
-                            <Card variant="outlined" elevation={3} >
+                            <Card variant="outlined" elevation={3} style={{ marginBottom: 15 }} >
                                 <CardHeader avatar={<Avatar />} title={postDetail.createdBy} />
                                 <CardContent>
                                     {postDetail.message && (
@@ -77,15 +78,19 @@ function PostDetail({ match }) {
                                     <IconButton>
                                         <FavoriteBorder style={{ color: red[500] }} />
                                     </IconButton>
-                                    <IconButton>
-                                        <QuestionAnswer style={{ color: blue[500] }} />
-                                    </IconButton>
                                 </CardActions>
                             </Card>
+                            
+                            <CommentForm postId={postDetail.id} />
+                            {postDetail.comments.items.map((comment, index) => (
+                                <div key={index}>
+                                    <CommentDetail comment={comment} />
+                                </div>
+                            ))}
                         </Grid>
-                    </Grid>
-                )
-            )}
+                    )
+                )}
+            </Grid>
         </div>
     );
 }
