@@ -118,9 +118,6 @@ export const onDeleteComment = /* GraphQL */ `
         id
         createdBy
         message
-        comments {
-          nextToken
-        }
         image
         createdAt
         updatedAt

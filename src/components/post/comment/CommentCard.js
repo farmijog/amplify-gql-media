@@ -2,7 +2,9 @@ import React from "react";
 import { Avatar, Card, CardHeader, CardContent, Typography } from "@material-ui/core";
 import moment from "moment"
 
-function CommentCard({ comment }) {
+import CommentDeleteButton from "./CommentDeleteButton";
+
+function CommentCard({ comment, userLoggedIn }) {
     return (
         <div>
             <Card variant="outlined" elevation={3} style={{ marginBottom: 5 }}>
@@ -10,6 +12,7 @@ function CommentCard({ comment }) {
                     avatar={<Avatar />}
                     title={comment.createdBy}
                     subheader={moment(comment.createdAt).fromNow()}
+                    action={comment.createdBy === userLoggedIn ? <CommentDeleteButton commentId={comment.id} /> : ""}
                 />
                 <CardContent>
                     <Typography variant="body2">

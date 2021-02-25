@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useReducer } from "react";
-import { API, graphqlOperation, Storage } from "aws-amplify";
-import { Avatar, Button, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading, 
+import React, { useEffect, useState } from "react";
+import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
+import { Avatar, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading, 
     IconButton, Grid, Typography 
 } from "@material-ui/core";
 import { FavoriteBorder } from "@material-ui/icons";
@@ -14,11 +14,27 @@ import CommentCard from "./comment/CommentCard";
 
 function PostDetail({ match }) {
     const { id } = match.params;
+    const [user, setUser] = useState({});
     const [loadingPost, setLoadingPost] = useState(true);
     const [postDetail, setPostDetail] = useState();
 
     useEffect(() => {
-        getPostDetail(id)
+        getPostDetail(id);
+        checkIfUserExists();
+        subscriptionOnCreateComment();
+        subscriptionOnDeleteComment();
+    }, []);
+
+    const checkIfUserExists = async () => {
+        try {
+            const user = await Auth.currentAuthenticatedUser();
+            setUser(user);
+        } catch (error) {
+            
+        }
+    }
+
+    const subscriptionOnCreateComment = () => {
         try {
             const subscription = API.graphql(graphqlOperation(subscriptions.onCreateComment)).subscribe({
                 next: ({ value }) => {
@@ -28,9 +44,23 @@ function PostDetail({ match }) {
             })
             return () => subscription.unsubscribe();
         } catch (error) {
-            console.log("error on subscription: ", error)
+            console.log("error on subscription onCreateComment: ", error)
         }
-    }, [])
+    }
+
+    const subscriptionOnDeleteComment = () => {
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteComment)).subscribe({
+                next: ({ value }) => {
+                    const { post: { id } } = value.data.onDeleteComment
+                    getPostDetail(id);
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error on subscription onDeleteComment: ", error);
+        }
+    }
 
     const getPostDetail = async (id) => {
         try {
@@ -94,7 +124,10 @@ function PostDetail({ match }) {
                             <CommentForm postId={postDetail.id} />
                             {postDetail.comments.items.map((comment, index) => (
                                 <div key={index}>
-                                    <CommentCard comment={comment} />
+                                    <CommentCard 
+                                        comment={comment}
+                                        userLoggedIn={user ? user.username : null }
+                                    />
                                 </div>
                             ))}
                         </Grid>
