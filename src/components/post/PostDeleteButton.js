@@ -3,34 +3,38 @@ import { API, graphqlOperation } from "aws-amplify";
 import { CircularProgress as Loading, IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
 import { MoreHoriz } from "@material-ui/icons";
 
-import * as mutations from "../../../graphql/mutations";
+import * as mutations from "../../graphql/mutations";
 
-function CommentDeleteButton({ commentId }) {
-    const [loadingCommentAction, setLoadingCommentAction] = useState(false)
+function PostDeleteButton({ postId }) {
+    const [loadingPostAction, setLoadingPostAction] = useState(false);
     const [openMenu, setOpenMenu] = useState(null);
 
     const handleClick = (e) => {
+        e.stopPropagation();
         setOpenMenu(e.currentTarget);
-    }
+    };
 
-    const handleClose = () => {
-        setOpenMenu(null);
-    }
+    const handleClose = (e) => {
+        e.stopPropagation();
+        setOpenMenu(null)
+    };
 
-    const deleteCommentFromPost = async () => {
+    const deletePostOption = async (e) => {
         try {
-            setLoadingCommentAction(true);
-            handleClose();
-            await API.graphql(graphqlOperation(mutations.deleteComment, { input: { id: commentId } }));
+            e.stopPropagation();
+            setOpenMenu(null);
+            setLoadingPostAction(true);
+            await API.graphql(graphqlOperation(mutations.deletePost, { input: { id: postId } }));
+            console.log("Post deleted");
         } catch (error) {
-            console.log("Error while trying to delete the comment: ", error);
+            console.log("Error while trying to delete the post: ", error);
         }
-        setLoadingCommentAction(false);
+        setLoadingPostAction(false)
     }
 
     return (
         <div>
-            {loadingCommentAction ? (
+            {loadingPostAction ? (
                 <Loading />
             ) : (
                 <>
@@ -53,7 +57,7 @@ function CommentDeleteButton({ commentId }) {
                             horizontal: "center"
                         }}
                     >
-                        <MenuItem onClick={deleteCommentFromPost}>
+                        <MenuItem onClick={deletePostOption}>
                             <Typography variant="body2">
                                 Delete
                             </Typography>
@@ -65,4 +69,4 @@ function CommentDeleteButton({ commentId }) {
     );
 }
 
-export default CommentDeleteButton;
+export default PostDeleteButton;

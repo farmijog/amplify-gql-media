@@ -1,7 +1,7 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useContext } from "react";
 import { AppBar, Button, makeStyles, Toolbar, Typography } from "@material-ui/core";
 
+import { AppContext } from "../../context/AppProvider";
 import ThemeToggle from "./ThemeToggle";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,9 +20,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function NavBar() {
-    const history = useHistory();
     const classes = useStyles();
-
+    const { user } = useContext(AppContext);
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -34,12 +33,21 @@ function NavBar() {
 
                     </Typography>
                     <ThemeToggle />
-                    <Button href="/signin" className={classes.navbutton} color="inherit">
-                        Sign in
-                    </Button>
-                    <Button href="/signup" className={classes.navbutton} color="inherit">
-                        Sign up
-                    </Button>
+                    {user ? (
+                        <Typography variant="body2">
+                            {user.username}
+                        </Typography>                        
+                    ) : (
+                        <Typography>
+                        <Button href="/signin" className={classes.navbutton} color="inherit">
+                            Sign in
+                        </Button>
+                        <Button href="/signup" className={classes.navbutton} color="inherit">
+                            Sign up
+                        </Button>
+                        </Typography>
+                    )}
+                    
                 </Toolbar>
             </AppBar>
         </div>

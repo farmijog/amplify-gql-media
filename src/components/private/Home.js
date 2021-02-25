@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useContext, useState, useEffect, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
 import { Button, CircularProgress as Loading, Grid } from "@material-ui/core";
 
 import * as queries from "../../graphql/queries";
 import * as subscriptions from "../../graphql/subscriptions"
+import { AppContext } from "../../context/AppProvider";
 import PostCard from "../post/PostCard";
 import PostForm from "../post/PostForm";
 
@@ -29,11 +30,10 @@ function reducer(state, action) {
 
 function Home() {
     const history = useHistory();
-    const [user, setUser] = useState(null);
+    const { user } = useContext(AppContext);
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        checkIfUserExists();
         fetchPosts();
         const subscription = API.graphql(graphqlOperation(subscriptions.onCreatePost)).subscribe({
             next: ({ value }) => 
@@ -44,15 +44,6 @@ function Home() {
         })
         return () => subscription.unsubscribe();
     }, [])
-
-    const checkIfUserExists = async () => {
-        try {
-            const user = await Auth.currentAuthenticatedUser();
-            setUser(user);
-        } catch (error) {
-            
-        }
-    }
 
     const fetchPosts = async () => {
         try {
@@ -106,7 +97,7 @@ function Home() {
                         ) : (
                             state.posts.map((post, index) => (
                                 <Grid item key={index} style={{ width: "100%", maxWidth: 600 }} >
-                                    <PostCard post={post} />        
+                                    <PostCard post={post} userLoggedIn={user ? user.username : null} />        
                                 </Grid>    
                                 )
                             )

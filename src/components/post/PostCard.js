@@ -1,11 +1,13 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import {
-    Avatar, Card, CardHeader, CardContent, CardActions, CardMedia, IconButton, makeStyles, Typography
+    Avatar, Card, CardHeader, CardContent, CardActionArea, CardActions, CardMedia, IconButton, makeStyles, Typography
 } from "@material-ui/core";
 import { red, blue } from "@material-ui/core/colors";
 import { FavoriteBorder, QuestionAnswer } from "@material-ui/icons";
 import moment from "moment";
+
+import PostDeleteButton from "./PostDeleteButton";
 
 const useStyles = makeStyles((theme) => ({
     media: {
@@ -14,16 +16,20 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function PostCard({ post }) {
+function PostCard({ post, userLoggedIn }) {
     const history = useHistory();
     const classes = useStyles();
     return (
-        <div>
+        <div 
+            style={{ cursor: "pointer" }} 
+            onClick={() => history.push(`/post/${post.id}`)}
+        >
             <Card variant="outlined" elevation={3}>
                 <CardHeader
                     avatar={<Avatar />}
                     title={post.createdBy}
                     subheader={moment(post.createdAt).fromNow()}
+                    action={post.createdBy === userLoggedIn ? <PostDeleteButton postId={post.id} /> : ""}
                 />
                 <CardContent>
                     <Typography>
@@ -46,6 +52,7 @@ function PostCard({ post }) {
                         {post.comments.items.length}
                     </Typography>
                 </CardActions>
+                
             </Card>
         </div>
     );
