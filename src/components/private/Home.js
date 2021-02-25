@@ -48,7 +48,7 @@ function Home() {
     const checkIfUserExists = async () => {
         try {
             const user = await Auth.currentAuthenticatedUser();
-            console.log("User: ", user)
+            // console.log("User: ", user)
             setUser(user);
         } catch (error) {
             

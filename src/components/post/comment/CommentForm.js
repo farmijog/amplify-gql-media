@@ -17,7 +17,7 @@ function CommentForm({ postId }) {
         try {
             setCommentLoading(true);
             await API.graphql(graphqlOperation(mutations.createComment, { input: commentData }));
-            setCommentData({ message: "" });
+            setCommentData({ message: "", commentPostId: postId });
             
         } catch (error) {
             console.log("Error while trying to comment to the post: ", error);

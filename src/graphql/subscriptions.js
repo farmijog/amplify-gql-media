@@ -73,6 +73,8 @@ export const onCreateComment = /* GraphQL */ `
       id
       message
       createdBy
+      createdAt
+      updatedAt
       post {
         id
         createdBy
@@ -81,8 +83,6 @@ export const onCreateComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
-      createdAt
-      updatedAt
     }
   }
 `;

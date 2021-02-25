@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useReducer } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
-import { Avatar, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading, 
+import { Avatar, Button, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading, 
     IconButton, Grid, Typography 
 } from "@material-ui/core";
 import { FavoriteBorder } from "@material-ui/icons";
@@ -19,19 +19,24 @@ function PostDetail({ match }) {
 
     useEffect(() => {
         getPostDetail(id)
-        const subscription = API.graphql(graphqlOperation(subscriptions.onCreateComment)).subscribe({
-            next: ({ value }) => {
-                const { post: { id } } = value.data.onCreateComment
-                getPostDetail(id)
-            }
-        })
-        return () => subscription.unsubscribe();
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onCreateComment)).subscribe({
+                next: ({ value }) => {
+                    const { post: { id } } = value.data.onCreateComment
+                    getPostDetail(id)
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error on subscription: ", error)
+        }
     }, [])
 
     const getPostDetail = async (id) => {
         try {
             const post = await API.graphql(graphqlOperation(queries.getPost, { id: id }));
-            post.data.getPost !== null ? setPostDetail(post.data.getPost) : setPostDetail(null);
+            const postFromApi = post.data.getPost
+            postFromApi !== null ? setPostDetail(postFromApi) : setPostDetail(null);
         } catch (error) {
             console.log("Error while fetching post: ", error);
         }
@@ -86,7 +91,6 @@ function PostDetail({ match }) {
                                     </IconButton>
                                 </CardActions>
                             </Card>
-                            
                             <CommentForm postId={postDetail.id} />
                             {postDetail.comments.items.map((comment, index) => (
                                 <div key={index}>
