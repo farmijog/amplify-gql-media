@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { Button, Card, Link, TextField, Typography, CircularProgress } from "@material-ui/core";
 import { Alert, AlertTitle } from "@material-ui/lab";
+
+import { AppContext } from "../../context/AppProvider";
 
 const initialState = {
     username: "", password: "", email: "", authCode: "", formType: "signUp"
 }
 
 function SignUp() {
+    const { setUserContext } = useContext(AppContext);
     const history = useHistory();
     const [user, setUser] = useState(null);
     const [formState, setFormState] = useState(initialState);
@@ -23,6 +26,7 @@ function SignUp() {
         try {
             const user = await Auth.currentAuthenticatedUser();
             setUser(user);
+            setUserContext(user);
             if (user) {
                 history.push("/home")
             }

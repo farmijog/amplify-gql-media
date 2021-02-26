@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import { Button, Card, CircularProgress, Link, TextField, Typography } from "@material-ui/core";
-import { Alert, AlertTitle } from "@material-ui/lab"
+import { Alert, AlertTitle } from "@material-ui/lab";
+
+import { AppContext } from "../../context/AppProvider";
 
 const initialState = { username: "", password: "" };
 
 function SignIn() {
+    const { setUserContext } = useContext(AppContext);
     const history = useHistory();
     const [input, setInput] = useState(initialState);
     const [user, setUser] = useState(null);
@@ -21,6 +24,7 @@ function SignIn() {
         try {
             const user = await Auth.currentAuthenticatedUser();
             setUser(user);
+            setUserContext(user);
             if (user) {
                 history.push("/home");
             }
@@ -39,7 +43,8 @@ function SignIn() {
         if (username === "" || password === "") return;
         try {
             setLoading(true);
-            await Auth.signIn(username, password);
+            const userLoggedIn = await Auth.signIn(username, password);
+            setUserContext(userLoggedIn);
             setInput(() => ({ ...input, username: "", password: "" }));
             setLoading(false);
             history.push("/home");

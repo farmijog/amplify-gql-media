@@ -7,7 +7,7 @@ import theme from "../styles/Theme";
 export const AppContext = createContext();
 
 function AppProvider({ children }) {
-    const [user, setUser] = useState(null);
+    const [user, setUserContext] = useState(null);
     const [themeMode, setThemeMode] = useState(
         localStorage.getItem("theme") || "lightTheme"
     );
@@ -20,7 +20,7 @@ function AppProvider({ children }) {
     const checkIfUserExists = async () => {
         try {
             const currentUser = await Auth.currentAuthenticatedUser();
-            setUser(currentUser);
+            setUserContext(currentUser);
         } catch (error) {
             
         }
@@ -36,7 +36,7 @@ function AppProvider({ children }) {
         })
     }
 
-    const value = { toggleTheme, themeMode, user };
+    const value = { toggleTheme, themeMode, user, setUserContext };
     const customTheme = theme[themeMode];
 
     return (

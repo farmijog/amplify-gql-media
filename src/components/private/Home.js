@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect, useReducer } from "react";
-import { useHistory } from "react-router-dom";
-import { Auth, API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import { Button, CircularProgress as Loading, Grid } from "@material-ui/core";
 
 import * as queries from "../../graphql/queries";
@@ -29,7 +28,6 @@ function reducer(state, action) {
 }
 
 function Home() {
-    const history = useHistory();
     const { user } = useContext(AppContext);
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -62,25 +60,10 @@ function Home() {
         }
     }
 
-    const signOutButton = async () => {
-        try {
-            await Auth.signOut();
-            history.push("/signin");
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     return (
         user && (
             <div >
                 <h1>Welcome back, {user.username}! </h1>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    onClick={signOutButton} 
-                    style={{ borderRadius: 50, textTransform: "none", marginBottom: 15 }}
-                >Sign Out</Button>
                 <Grid 
                     container 
                     direction="column" 

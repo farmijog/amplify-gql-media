@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const initialFormState = {
-    username: "", password: "", email: "", authCode: "", formType: "signUp"
+    username: "", password: "", email: "", authCode: "", formType: "signIn"
 }
 
 function AuthComponent() {
