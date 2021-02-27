@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Auth } from "aws-amplify";
-import { Button, IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
+import { IconButton, Menu, MenuItem, Typography } from "@material-ui/core";
 import { AccountCircle, ArrowDropDown, ExitToApp, Settings } from "@material-ui/icons";
 
 import { AppContext } from "../../context/AppProvider";
@@ -24,6 +24,7 @@ function DropMenu() {
             await Auth.signOut();
             setUserContext(null);
             handleClose();
+            history.push("/signin");
         } catch (error) {
             console.log("Error while signing out: ", error);
         }
@@ -32,7 +33,7 @@ function DropMenu() {
     return (
         <div>
             <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                <ArrowDropDown fontSize="small" />
+                <ArrowDropDown fontSize="small" style={{ color: "white"}} />
             </IconButton>
             <Menu
                 id="simple-menu"
@@ -54,78 +55,36 @@ function DropMenu() {
                 {user ? (
                     <div>
                         <MenuItem>
-                            <Button
-                                size="small"
-                                disableRipple
-                                style={{ 
-                                    backgroundColor: "transparent", 
-                                    textTransform: "none",
-                                }} 
-                            >
-                                <AccountCircle /> &nbsp;
+                            <AccountCircle />
+                            <Typography style={{ marginLeft: 15 }} variant="body2">
                                 {user.username}
-                            </Button>
+                            </Typography>
                         </MenuItem>
                         <MenuItem>
-                            <Button
-                                size="small"
-                                disableRipple
-                                style={{ 
-                                    backgroundColor: "transparent", 
-                                    textTransform: "none",
-                                }} 
-                            >
-                                <Settings /> &nbsp;
+                            <Settings /> 
+                            <Typography style={{ marginLeft: 15 }} variant="body2">
                                 Settings
-                            </Button>
+                            </Typography>
                         </MenuItem>
-                        <MenuItem>
-                            <Button
-                                onClick={signOut}
-                                href="/signin"
-                                size="small"
-                                disableRipple
-                                style={{ 
-                                    backgroundColor: "transparent", 
-                                    textTransform: "none",
-                                }} 
-                            >
-                                <ExitToApp /> &nbsp;
-                                Signout
-                            </Button>
+                        <MenuItem onClick={signOut}>
+                            <ExitToApp /> 
+                            <Typography style={{ marginLeft: 15 }} variant="body2">
+                                Sign out
+                            </Typography>
                         </MenuItem>
                     </div>
                 ) : (
                     <div>
-                        <MenuItem>
-                            <Button
-                                onClick={handleClose}
-                                href="/signin"
-                                size="small"
-                                disableRipple
-                                style={{ 
-                                    backgroundColor: "transparent", 
-                                    textTransform: "none",
-                                }} 
-                            >
+                        <MenuItem onClick={() => { handleClose(); history.push("/signin"); }} >
+                            <Typography variant="body2">
                                 Sign in
-                            </Button>
+                            </Typography>
                         </MenuItem>
-                        <MenuItem>
-                            <Button
-                                onClick={handleClose}
-                                href="/signup"
-                                size="small"
-                                disableRipple
-                                style={{ 
-                                    backgroundColor: "transparent", 
-                                    textTransform: "none",
-                                }} 
-                            >
+                        <MenuItem onClick={() => { handleClose(); history.push("/signup"); }} >
+                            <Typography variant="body2">
                                 Sign up
-                            </Button>
+                            </Typography>
                         </MenuItem>
-                        
                     </div> 
                 )}
             </Menu>

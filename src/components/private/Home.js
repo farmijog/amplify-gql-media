@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect, useReducer } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
-import { Button, CircularProgress as Loading, Grid } from "@material-ui/core";
+import { CircularProgress as Loading, Grid } from "@material-ui/core";
 
 import * as queries from "../../graphql/queries";
 import * as subscriptions from "../../graphql/subscriptions"

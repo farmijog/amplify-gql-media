@@ -15,9 +15,9 @@ function App() {
     
     return (
         <div>
-            <NavBar />
-            <Container maxWidth="lg" >
-                <Router>
+            <Router>
+                <NavBar />
+                <Container maxWidth="lg" >
                     <Route exact path="/" component={Landing} />
                     <Route exact path="/signin" component={SignIn} />
                     <Route exact path="/signup" component={SignUp} />
@@ -25,8 +25,8 @@ function App() {
                         <ProtectedRoute exact path="/home" component={Home} />
                     </Switch>
                     <Route exact path="/post/:id" component={PostDetail} />
-                </Router>
-            </Container>
+                </Container>
+            </Router>
         </div>
         
     );

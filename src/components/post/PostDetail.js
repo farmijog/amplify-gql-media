@@ -9,6 +9,7 @@ import moment from "moment";
 
 import * as queries from "../../graphql/queries";
 import * as subscriptions from "../../graphql/subscriptions";
+import PostNotFound from "./PostNotFound";
 import CommentForm from "./comment/CommentForm";
 import CommentCard from "./comment/CommentCard";
 
@@ -87,7 +88,8 @@ function PostDetail({ match }) {
                     <Loading />
                 ):(
                     !postDetail ? (
-                        <h1>post not found</h1>
+                        // <h5>F</h5>
+                        <PostNotFound />
                     ) : (
                         <Grid 
                             item style={{ width: "100%", maxWidth: 600 }}
