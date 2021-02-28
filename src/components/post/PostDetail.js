@@ -67,6 +67,10 @@ function PostDetail({ match }) {
         try {
             const post = await API.graphql(graphqlOperation(queries.getPost, { id: id }));
             const postFromApi = post.data.getPost
+            if (postFromApi.image) {
+                const image = await Storage.get(postFromApi.image, { download: false });
+                postFromApi.image = image;
+            }
             postFromApi !== null ? setPostDetail(postFromApi) : setPostDetail(null);
         } catch (error) {
             console.log("Error while fetching post: ", error);

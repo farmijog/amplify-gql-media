@@ -37,7 +37,8 @@ function Home() {
             next: ({ value }) => 
             {
                 const post = value.data.onCreatePost
-                dispatch({ type: "ADD_POST", post })
+                // dispatch({ type: "ADD_POST", post })
+                fetchPosts();
             }
         })
         return () => subscription.unsubscribe();
@@ -52,7 +53,6 @@ function Home() {
                     const image = await Storage.get(post.image);
                     post.image = image;
                 }
-                // return image;
             }))
             dispatch({ type: "SET_POSTS", posts: postData.data.listPosts.items })
         } catch (error) {
