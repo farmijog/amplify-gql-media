@@ -3,10 +3,11 @@ import { useHistory } from "react-router-dom";
 import {
     Avatar, Card, CardHeader, CardContent, CardActionArea, CardActions, CardMedia, IconButton, makeStyles, Typography
 } from "@material-ui/core";
-import { red, blue } from "@material-ui/core/colors";
+import { blue } from "@material-ui/core/colors";
 import { FavoriteBorder, QuestionAnswer } from "@material-ui/icons";
 import moment from "moment";
 
+import LikeButton from "./like/LikeButton";
 import PostDeleteButton from "./PostDeleteButton";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,9 +43,10 @@ function PostCard({ post, userLoggedIn }) {
                     />
                 )}
                 <CardActions disableSpacing>
-                    <IconButton>
-                        <FavoriteBorder style={{ color: red[500] }} />
-                    </IconButton>
+                    <LikeButton userLoggedIn={userLoggedIn} postId={post.id} likes={post.likes.items}   />
+                    <Typography>
+                        {post.likes.items.length}
+                    </Typography>
                     <IconButton onClick={() => history.push(`/post/${post.id}`)} >
                         <QuestionAnswer style={{ color: blue[500] }} />
                     </IconButton>

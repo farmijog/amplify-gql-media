@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
-import { Avatar, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading, 
-    IconButton, Grid, Typography 
-} from "@material-ui/core";
-import { FavoriteBorder } from "@material-ui/icons";
-import { red } from "@material-ui/core/colors";
+import { Avatar, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading,  Grid, Typography } from "@material-ui/core";
 import moment from "moment";
 
 import * as queries from "../../graphql/queries";
@@ -12,6 +8,7 @@ import * as subscriptions from "../../graphql/subscriptions";
 import PostNotFound from "./PostNotFound";
 import CommentForm from "./comment/CommentForm";
 import CommentCard from "./comment/CommentCard";
+import LikeButton from "./like/LikeButton";
 
 function PostDetail({ match }) {
     const { id } = match.params;
@@ -121,9 +118,9 @@ function PostDetail({ match }) {
                                     <Typography variant="caption"> {postDetail.comments.items.length} comments </Typography>
                                 </CardActions>
                                 <CardActions>
-                                    <IconButton>
-                                        <FavoriteBorder style={{ color: red[500] }} />
-                                    </IconButton>
+                                    <LikeButton userLoggedIn={user ? user.username : null} 
+                                        postId={postDetail.id} likes={postDetail.likes.items}
+                                    />
                                 </CardActions>
                             </Card>
                             <CommentForm postId={postDetail.id} />
