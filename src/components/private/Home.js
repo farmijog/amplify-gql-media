@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { CircularProgress as Loading, Grid } from "@material-ui/core";
 
@@ -33,6 +33,8 @@ function Home() {
 
     useEffect(() => {
         fetchPosts();
+        subscriptionOnLikePost();
+        subscriptionOnUnlikePost();
         const subscription = API.graphql(graphqlOperation(subscriptions.onCreatePost)).subscribe({
             next: ({ value }) => 
             {
@@ -57,6 +59,34 @@ function Home() {
             dispatch({ type: "SET_POSTS", posts: postData.data.listPosts.items })
         } catch (error) {
             console.log("error while fetching posts: ", error);
+        }
+    }
+
+    const subscriptionOnLikePost = () => {
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onCreateLike)).subscribe({
+                next: ({ value }) => {
+                    const subobject = value.data.onCreateLike
+                    fetchPosts();
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error while sub to like post: ", error)
+        }
+    }
+
+    const subscriptionOnUnlikePost = () => {
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteLike)).subscribe({
+                next: ({ value }) => {
+                    const subobject = value.data.onDeleteLike
+                    fetchPosts();
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error while sub to unlike post: ", error)
         }
     }
 

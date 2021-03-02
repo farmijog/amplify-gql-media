@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { API, Auth, graphqlOperation, Storage } from "aws-amplify";
 import { Avatar, Card, CardHeader, CardContent, CardActions, CircularProgress as Loading,  Grid, Typography } from "@material-ui/core";
 import moment from "moment";
 
 import * as queries from "../../graphql/queries";
 import * as subscriptions from "../../graphql/subscriptions";
+import { AppContext } from "../../context/AppProvider";
 import PostNotFound from "./PostNotFound";
 import CommentForm from "./comment/CommentForm";
 import CommentCard from "./comment/CommentCard";
@@ -12,23 +13,43 @@ import LikeButton from "./like/LikeButton";
 
 function PostDetail({ match }) {
     const { id } = match.params;
-    const [user, setUser] = useState({});
+    const { user } = useContext(AppContext);
     const [loadingPost, setLoadingPost] = useState(true);
-    const [postDetail, setPostDetail] = useState();
+    const [postDetail, setPostDetail] = useState({});
 
     useEffect(() => {
         getPostDetail(id);
-        checkIfUserExists();
         subscriptionOnCreateComment();
         subscriptionOnDeleteComment();
+        subscriptionOnLikePost();
+        subscriptionOnUnlikePost();
     }, []);
 
-    const checkIfUserExists = async () => {
+    const subscriptionOnLikePost = () => {
         try {
-            const user = await Auth.currentAuthenticatedUser();
-            setUser(user);
+            const subscription = API.graphql(graphqlOperation(subscriptions.onCreateLike)).subscribe({
+                next: ({ value }) => {
+                    const { post: { id } } = value.data.onCreateLike
+                    getPostDetail(id);
+                }
+            })
+            return () => subscription.unsubscribe();
         } catch (error) {
-            
+            console.log("error on subscription onLikePost: ", error)
+        }
+    }
+
+    const subscriptionOnUnlikePost = () => {
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteLike)).subscribe({
+                next: ({ value }) => {
+                    const { post: { id } } = value.data.onDeleteLike
+                    getPostDetail(id);
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error on subscription onLikePost: ", error)
         }
     }
 

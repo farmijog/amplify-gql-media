@@ -34,7 +34,6 @@ function LikeButton({ postId, likes, userLoggedIn }) {
     const likeOnPost = async () => {
         try {
             await API.graphql(graphqlOperation(mutations.createLike, { input: { likePostId: postId } }));
-            console.log("Post liked!");
         } catch (error) {
             console.log("Error while trying to like the post: ", error);
         }
@@ -43,7 +42,6 @@ function LikeButton({ postId, likes, userLoggedIn }) {
     const unlikeOnPost = async () => {
         try {
             await API.graphql(graphqlOperation(mutations.deleteLike, { input: { id: like.id } }))
-            console.log("Post unliked!");
         } catch (error) {
             console.log("Error while trying to unlike the post: ", error);
         }
