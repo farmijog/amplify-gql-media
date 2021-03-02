@@ -92,7 +92,6 @@ function PostDetail({ match }) {
                     <Loading />
                 ):(
                     !postDetail ? (
-                        // <h5>F</h5>
                         <PostNotFound />
                     ) : (
                         <Grid 
@@ -118,7 +117,7 @@ function PostDetail({ match }) {
                                     </Typography>
                                 </CardActions>
                                 <CardActions style={{ paddingLeft: 15 }} >
-                                    <Typography variant="caption"> 12 likes </Typography>
+                                    <Typography variant="caption"> {postDetail.likes.items.length} likes </Typography>
                                     <Typography variant="caption"> {postDetail.comments.items.length} comments </Typography>
                                 </CardActions>
                                 <CardActions>

@@ -17,6 +17,15 @@ export const onCreatePost = /* GraphQL */ `
         }
         nextToken
       }
+      likes {
+        items {
+          id
+          createdBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       image
       createdAt
       updatedAt
@@ -33,6 +42,15 @@ export const onUpdatePost = /* GraphQL */ `
         items {
           id
           message
+          createdBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      likes {
+        items {
+          id
           createdBy
           createdAt
           updatedAt
@@ -61,6 +79,15 @@ export const onDeletePost = /* GraphQL */ `
         }
         nextToken
       }
+      likes {
+        items {
+          id
+          createdBy
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       image
       createdAt
       updatedAt
@@ -73,16 +100,22 @@ export const onCreateComment = /* GraphQL */ `
       id
       message
       createdBy
-      createdAt
-      updatedAt
       post {
         id
         createdBy
         message
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
         image
         createdAt
         updatedAt
       }
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -97,6 +130,9 @@ export const onUpdateComment = /* GraphQL */ `
         createdBy
         message
         comments {
+          nextToken
+        }
+        likes {
           nextToken
         }
         image
@@ -118,6 +154,84 @@ export const onDeleteComment = /* GraphQL */ `
         id
         createdBy
         message
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        image
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onCreateLike = /* GraphQL */ `
+  subscription OnCreateLike {
+    onCreateLike {
+      id
+      createdBy
+      post {
+        id
+        createdBy
+        message
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        image
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateLike = /* GraphQL */ `
+  subscription OnUpdateLike {
+    onUpdateLike {
+      id
+      createdBy
+      post {
+        id
+        createdBy
+        message
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
+        image
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteLike = /* GraphQL */ `
+  subscription OnDeleteLike {
+    onDeleteLike {
+      id
+      createdBy
+      post {
+        id
+        createdBy
+        message
+        comments {
+          nextToken
+        }
+        likes {
+          nextToken
+        }
         image
         createdAt
         updatedAt
