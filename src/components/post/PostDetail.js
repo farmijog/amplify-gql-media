@@ -32,6 +32,17 @@ function postReducer(state, action) {
                     }
                 } 
             }
+        case "ADD_LIKE":
+            return {
+                ...state,
+                postDetail: {
+                    ...state.postDetail,
+                    likes: {
+                        ...state.postDetail.likes,
+                        items: [...state.postDetail.likes.items, action.like]
+                    }
+                }
+            }
         case "DELETE_COMMENT":
             return {
                 ...state,
@@ -40,6 +51,17 @@ function postReducer(state, action) {
                     comments: {
                         ...state.postDetail.comments,
                         items: state.postDetail.comments.items.filter((comment) => comment.id !== action.id)
+                    }
+                }
+            }
+        case "DELETE_LIKE":
+            return {
+                ...state,
+                postDetail: {
+                    ...state.postDetail,
+                    likes: {
+                        ...state.postDetail.likes,
+                        items: state.postDetail.likes.items.filter((like) => like.id !== action.id)
                     }
                 }
             }
@@ -57,38 +79,37 @@ function PostDetail({ match }) {
         getPostDetail(id);
         subscriptionOnCreateComment();
         subscriptionOnDeleteComment();
-        // subscriptionOnLikePost();
-        // subscriptionOnUnlikePost();
+        subscriptionOnLikePost();
+        subscriptionOnUnlikePost();
     }, []);
 
-    // const subscriptionOnLikePost = () => {
-    //     try {
-    //         const subscription = API.graphql(graphqlOperation(subscriptions.onCreateLike)).subscribe({
-    //             next: ({ value }) => {
-    //                 const { post } = value.data.onCreateLike
-    //                 // setPostDetail({ ...postDetail, likes: post.likes });
-    //                 getPostDetail(post.id);
-    //             }
-    //         })
-    //         return () => subscription.unsubscribe();
-    //     } catch (error) {
-    //         console.log("error on subscription onLikePost: ", error)
-    //     }
-    // }
+    const subscriptionOnLikePost = () => {
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onCreateLike)).subscribe({
+                next: ({ value }) => {
+                    const result = value.data.onCreateLike
+                    dispatch({ type: "ADD_LIKE", like: result });
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error on subscription onLikePost: ", error)
+        }
+    }
 
-    // const subscriptionOnUnlikePost = () => {
-    //     try {
-    //         const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteLike)).subscribe({
-    //             next: ({ value }) => {
-    //                 const { post } = value.data.onDeleteLike
-    //                 getPostDetail(post.id);
-    //             }
-    //         })
-    //         return () => subscription.unsubscribe();
-    //     } catch (error) {
-    //         console.log("error on subscription onLikePost: ", error)
-    //     }
-    // }
+    const subscriptionOnUnlikePost = () => {
+        try {
+            const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteLike)).subscribe({
+                next: ({ value }) => {
+                    const { id } = value.data.onDeleteLike
+                    dispatch({ type: "DELETE_LIKE", id: id });
+                }
+            })
+            return () => subscription.unsubscribe();
+        } catch (error) {
+            console.log("error on subscription onLikePost: ", error)
+        }
+    }
 
     const subscriptionOnCreateComment = () => {
         try {
