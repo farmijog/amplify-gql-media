@@ -105,10 +105,14 @@ export const onCreateComment = /* GraphQL */ `
         createdBy
         message
         comments {
-          nextToken
+          items {
+              id message createdBy createdAt
+          }
         }
         likes {
-          nextToken
+          items {
+              id createdAt createdBy
+          }
         }
         image
         createdAt
@@ -179,10 +183,14 @@ export const onCreateLike = /* GraphQL */ `
         createdBy
         message
         comments {
-          nextToken
+          items {
+              id message createdBy createdAt
+          }
         }
         likes {
-          nextToken
+            items {
+                id createdAt createdBy
+            }
         }
         image
         createdAt
@@ -227,10 +235,14 @@ export const onDeleteLike = /* GraphQL */ `
         createdBy
         message
         comments {
-          nextToken
+          items {
+              id message createdAt createdBy
+          }
         }
         likes {
-          nextToken
+          items {
+              id createdBy createdAt
+          }
         }
         image
         createdAt
