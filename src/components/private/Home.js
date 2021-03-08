@@ -9,13 +9,34 @@ import PostCard from "../post/PostCard";
 import PostForm from "../post/PostForm";
 
 const initialState = {
-    message: "", posts: []
+    loading: true, posts: []
 }
 
 function reducer(state, action) {
     switch(action.type) {
         case "SET_POSTS":
-            return { ...state, posts: action.posts }
+            return { ...state, posts: action.posts, loading: false }
+        case "LIKE_POST":
+            return { 
+                ...state, 
+                posts: state.posts.map((post) => post.id === action.like.post.id ? {
+                    ...post,
+                    likes: {
+                        ...post.likes,
+                        items: [...post.likes.items, action.like]
+                    }
+                } : post)
+            }
+        case "UNLIKE_POST":
+            return { ...state,
+                posts: state.posts.map((post) => post.id === action.unlike.post.id ? {
+                    ...post,
+                    likes: {
+                        ...post.likes,
+                        items: post.likes.items.filter((like) => like.id !== action.unlike.id )
+                    }
+                } : post)
+            }
         // case "SET_INPUT":
         //     return { ...state, [action.key]: action.value }
         // case "CLEAR_INPUT":
@@ -66,8 +87,8 @@ function Home() {
         try {
             const subscription = API.graphql(graphqlOperation(subscriptions.onCreateLike)).subscribe({
                 next: ({ value }) => {
-                    const subobject = value.data.onCreateLike
-                    fetchPosts();
+                    const result = value.data.onCreateLike
+                    dispatch({ type: "LIKE_POST", like: result });
                 }
             })
             return () => subscription.unsubscribe();
@@ -80,8 +101,8 @@ function Home() {
         try {
             const subscription = API.graphql(graphqlOperation(subscriptions.onDeleteLike)).subscribe({
                 next: ({ value }) => {
-                    const subobject = value.data.onDeleteLike
-                    fetchPosts();
+                    const result = value.data.onDeleteLike
+                    dispatch({ type: "UNLIKE_POST", unlike: result });
                 }
             })
             return () => subscription.unsubscribe();
@@ -105,7 +126,7 @@ function Home() {
                         <PostForm  />
                     </div>
                     {
-                        !state.posts.length ? (
+                        state.loading ? (
                             <Loading />
                         ) : (
                             state.posts.map((post, index) => (
@@ -120,7 +141,6 @@ function Home() {
             </div>
         )
     );
-
 }
 
 export default Home;
