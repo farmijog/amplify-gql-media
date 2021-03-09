@@ -179,7 +179,7 @@ function PostDetail({ match }) {
                         >
                             <Card variant="outlined" elevation={3} style={{ marginBottom: 15 }} >
                                 <CardHeader avatar={<Avatar />} title={state.postDetail.createdBy} />
-                                <CardContent>
+                                <CardContent style={{ paddingTop: 5 }} >
                                     {state.postDetail.message && (
                                         <Typography variant="h5">
                                             {state.postDetail.message}
@@ -191,7 +191,7 @@ function PostDetail({ match }) {
                                         style={{ height: "100%", width: "100%", objectFit: "contain" }}  alt=""
                                     />
                                 )}
-                                <CardActions style={{ paddingLeft: 15 }}>
+                                <CardActions style={{ paddingLeft: 15, paddingTop: 15 }}>
                                     <Typography variant="body2">
                                         {moment(state.postDetail.createdAt).format("h:mm a - DD MMMM YYYY")}
                                     </Typography>

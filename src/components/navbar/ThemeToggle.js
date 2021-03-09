@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../context/AppProvider";
 import { Switch } from "@material-ui/core";
+import { Brightness3 as DarkIcon, WbSunny as LightIcon } from "@material-ui/icons";
 
 function ThemeToggle() {
     const { toggleTheme, themeMode } = useContext(AppContext);
@@ -10,11 +11,14 @@ function ThemeToggle() {
     }
 
     return (
-        <Switch 
-            size="small" 
-            checked={themeMode === "darkTheme" ? true : false}
-            onChange={handleThemeChange}
-        />
+        <>
+            {themeMode === "darkTheme" ? <DarkIcon fontSize="small" /> : <LightIcon fontSize="small" />}
+            <Switch 
+                size="small" 
+                checked={themeMode === "darkTheme" ? true : false}
+                onChange={handleThemeChange}
+            />
+        </>
     );
 }
 
